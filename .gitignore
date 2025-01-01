@@ -1,0 +1,41 @@
+/out/
+/resources/public/js/compiled/
+/target/
+/*-init.clj
+/*.log
+
+# Leiningen
+/.lein-*
+/.nrepl-port
+
+# Node.js dependencies
+/node_modules/
+
+# shadow-cljs cache, port files
+/.shadow-cljs/
+shadow.build/
+
+.clj-kondo/cache/
+
+.clj-kondo/.cache/v1/cljs
+org.mozilla.javascript.tools.*/**/*.transit.json
+
+/target
+/classes
+/checkouts
+profiles.clj
+pom.xml
+pom.xml.asc
+*.jar
+*.class
+/.lein-*
+/.nrepl-port
+/.prepl-port
+.hgignore
+.hg/
+.cache/
+.lsp/
+**/.calva/repl.calva-repl
+.calva/
+.calva/output-window/
+
