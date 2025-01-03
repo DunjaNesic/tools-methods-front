@@ -271,3 +271,57 @@
        (assoc-in [:group-chat :error]
                  (str "Failed to leave group: " (pr-str resp))))))
 
+;; symptom checking
+
+(re-frame/reg-event-db
+ ::set-symptoms
+ (fn [db [_ symptom-list]]
+   (assoc db :symptoms symptom-list)))
+
+(re-frame/reg-event-fx
+ ::check-symptoms
+ (fn [{:keys [db]} [_]]
+   (let [user-symptoms (:symptoms db)]
+     {:db (-> db
+              (assoc :checker-loading? true)
+              (assoc :checker-error nil)
+              (assoc :checker-result nil))
+      :http-xhrio
+      {:method          :post
+       :uri             "http://localhost:3000/check-symptoms"
+       :params          {:symptoms user-symptoms}
+       :format          (json-request-format)
+       :response-format (json-response-format {:keywords? true})
+       :on-success      [::check-symptoms-success]
+       :on-failure      [::check-symptoms-failure]}})))
+
+(re-frame/reg-event-db
+ ::check-symptoms-success
+ (fn [db [_ response]]
+   (-> db
+       (assoc :checker-loading? false)
+       (assoc :checker-error nil)
+       (assoc :checker-result response))))
+
+(re-frame/reg-event-db
+ ::check-symptoms-failure
+ (fn [db [_ error-response]]
+   (-> db
+       (assoc :checker-loading? false)
+       (assoc :checker-error
+              (str "Error checking symptoms: " (pr-str error-response))))))
+
+(re-frame/reg-event-db
+ ::local-symptom-input
+ (fn [db [_ val]]
+   (assoc db :local-symptom val)))
+
+(re-frame/reg-event-db
+ ::add-symptom
+ (fn [db _]
+   (let [symp (get db :local-symptom)]
+     (-> db
+         (update :symptoms conj symp)
+         (assoc :local-symptom "")))))
+
+

@@ -64,3 +64,31 @@
  :group-user-input
  (fn [db _]
    (get-in db [:group-chat :user-input])))
+
+;; Symptom checker
+
+(re-frame/reg-sub
+ ::symptoms
+ (fn [db _]
+   (:symptoms db)))
+
+(re-frame/reg-sub
+ ::checker-loading?
+ (fn [db _]
+   (:checker-loading? db)))
+
+(re-frame/reg-sub
+ ::checker-error
+ (fn [db _]
+   (:checker-error db)))
+
+(re-frame/reg-sub
+ ::checker-result
+ (fn [db _]
+   (:checker-result db)))
+
+(re-frame/reg-sub
+ ::local-symptom
+ (fn [db _]
+   (:local-symptom db)))
+
