@@ -3,10 +3,8 @@
    [reagent.dom :as rdom]
    [re-frame.core :as re-frame]
    [tools-methods-front.events :as events]
-   [tools-methods-front.views :as views]
-   [tools-methods-front.config :as config]
-   ))
-
+   [tools-methods-front.viewss.views :as views]
+   [tools-methods-front.config :as config]))
 
 (defn dev-setup []
   (when config/debug?
@@ -20,5 +18,6 @@
 
 (defn init []
   (re-frame/dispatch-sync [::events/initialize-db])
+  (println "dunja je naj")
   (dev-setup)
   (mount-root))
