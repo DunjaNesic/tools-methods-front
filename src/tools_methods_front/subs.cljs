@@ -92,3 +92,34 @@
  (fn [db _]
    (:local-symptom db)))
 
+;; Personalized treatment
+(re-frame/reg-sub
+ ::medical-conditions
+ (fn [db _]
+   (:medical-conditions db)))
+
+(re-frame/reg-sub
+ ::lifestyle
+ (fn [db _]
+   (:lifestyle db)))
+
+(re-frame/reg-sub
+ ::genetic-markers
+ (fn [db _]
+   (:genetic-markers db)))
+
+(re-frame/reg-sub
+ ::treatment-loading?
+ (fn [db _]
+   (:treatment-loading? db)))
+
+(re-frame/reg-sub
+ ::treatment-error
+ (fn [db _]
+   (:treatment-error db)))
+
+(re-frame/reg-sub
+ ::treatment-result
+ (fn [db _]
+   (:treatment-result db)))
+

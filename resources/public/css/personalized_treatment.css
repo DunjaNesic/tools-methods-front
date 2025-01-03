@@ -1,0 +1,73 @@
+.personalized-treatment-container {
+    font-family: Arial, sans-serif;
+    line-height: 1.6;
+    padding: 2rem;
+    max-width: 40rem;
+    margin-bottom: 2rem;
+    background-color: #f9f9f9;
+    border-radius: 0.5rem;
+    box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.1);
+}
+
+.personalized-treatment-container h2 {
+    font-size: 2rem;
+    margin-bottom: 1rem;
+    color: #04103b;
+}
+
+.personalized-treatment-container p {
+    margin-bottom: 0.8rem;
+    color: #333;
+}
+
+.personalized-treatment-container input,
+.personalized-treatment-container select {
+    width: 100%;
+    padding: 0.8rem;
+    margin-bottom: 1rem;
+    font-size: 1rem;
+    border: 1px solid #ccc;
+    border-radius: 0.4rem;
+    box-sizing: border-box;
+}
+
+.personalized-treatment-container input::placeholder {
+    color: #888;
+}
+
+.personalized-treatment-container button {
+    padding: 0.5rem 0.75rem;
+    margin: 0.25rem 0.25rem 0.5rem 0;
+    border: none;
+    border-radius: 0.25rem;
+    background-color: #de5798;
+    color: white;
+    cursor: pointer;
+    font-size: 1rem;
+}
+
+.personalized-treatment-container button:hover {
+    background-color: #c24d85;
+}
+
+.personalized-treatment-container .error {
+    color: red;
+    font-size: 1rem;
+}
+
+.personalized-treatment-container .result {
+    background-color: #e7f4e4;
+    padding: 1rem;
+    border-radius: 0.4rem;
+    margin-top: 1.5rem;
+}
+
+.personalized-treatment-container .result h3 {
+    font-size: 1.5rem;
+    margin-bottom: 0.8rem;
+}
+
+.personalized-treatment-container .result p {
+    font-size: 1rem;
+    color: #333;
+}

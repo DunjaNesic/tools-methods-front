@@ -271,7 +271,7 @@
        (assoc-in [:group-chat :error]
                  (str "Failed to leave group: " (pr-str resp))))))
 
-;; symptom checking
+;; Symptom checking
 
 (re-frame/reg-event-db
  ::set-symptoms
@@ -324,4 +324,57 @@
          (update :symptoms conj symp)
          (assoc :local-symptom "")))))
 
+;;Personalized treatment
+
+(re-frame/reg-event-db
+ ::set-medical-conditions
+ (fn [db [_ conditions]]
+   (assoc db :medical-conditions conditions)))
+
+(re-frame/reg-event-db
+ ::set-lifestyle
+ (fn [db [_ lifestyle]]
+   (assoc db :lifestyle lifestyle)))
+
+(re-frame/reg-event-db
+ ::set-genetic-markers
+ (fn [db [_ markers]]
+   (assoc db :genetic-markers markers)))
+
+(re-frame/reg-event-fx
+ ::recommend-treatment
+ (fn [{:keys [db]} [_]]
+   (let [medical-conds  (:medical-conditions db)
+         lifestyle       (:lifestyle db)
+         genetic-markers (:genetic-markers db)]
+     {:db (-> db
+              (assoc :treatment-loading? true)
+              (assoc :treatment-error nil)
+              (assoc :treatment-result nil))
+      :http-xhrio
+      {:method          :post
+       :uri             "http://localhost:3000/recommendations"
+       :params          {:medical-conditions medical-conds
+                         :lifestyle          lifestyle
+                         :genetic-markers    genetic-markers}
+       :format          (json-request-format)
+       :response-format (json-response-format {:keywords? true})
+       :on-success      [::recommend-treatment-success]
+       :on-failure      [::recommend-treatment-failure]}})))
+
+(re-frame/reg-event-db
+ ::recommend-treatment-success
+ (fn [db [_ response]]
+   (-> db
+       (assoc :treatment-loading? false)
+       (assoc :treatment-error nil)
+       (assoc :treatment-result response))))
+
+(re-frame/reg-event-db
+ ::recommend-treatment-failure
+ (fn [db [_ error-response]]
+   (-> db
+       (assoc :treatment-loading? false)
+       (assoc :treatment-error
+              (str "Error getting recommendations: " (pr-str error-response))))))
 
