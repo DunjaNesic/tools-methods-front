@@ -378,3 +378,42 @@
        (assoc :treatment-error
               (str "Error getting recommendations: " (pr-str error-response))))))
 
+
+;;Healthcare chatbot
+
+(re-frame/reg-event-db
+ ::set-question
+ (fn [db [_ user-input]]
+   (assoc db :question user-input)))
+
+(re-frame/reg-event-fx
+ ::get-answer
+ (fn [{:keys [db]} [_]]
+   (let [question  (:question db)]
+     {:db (-> db
+              (assoc :answer-loading? true)
+              (assoc :answer-error nil))
+      :http-xhrio
+      {:method          :post
+       :uri             "http://localhost:3000/chatbot"
+       :params          {:question question}
+       :format          (json-request-format)
+       :response-format (json-response-format {:keywords? true})
+       :on-success      [::chatbot-answer-success]
+       :on-failure      [::chatbot-answer-failure]}})))
+
+(re-frame/reg-event-db
+ ::chatbot-answer-success
+ (fn [db [_ response]]
+   (-> db
+       (assoc :answer-loading? false)
+       (assoc :answer response)
+       (assoc :answer-error nil))))
+
+(re-frame/reg-event-db
+ ::chatbot-answer-failure
+ (fn [db [_ error-response]]
+   (-> db
+       (assoc :answer-loading? false)
+       (assoc :answer-error
+              (str "Error getting an answer: " (pr-str error-response))))))

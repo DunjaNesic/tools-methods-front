@@ -123,3 +123,22 @@
  (fn [db _]
    (:treatment-result db)))
 
+(re-frame/reg-sub
+ ::question
+ (fn [db _]
+   (:question db)))
+
+(re-frame/reg-sub
+ ::answer
+ (fn [db _]
+   (:answer db)))
+
+(re-frame/reg-sub
+ ::answer-loading?
+ (fn [db _]
+   (:answer-loading? db)))
+
+(re-frame/reg-sub
+ ::answer-error
+ (fn [db _]
+   (:answer-error db)))

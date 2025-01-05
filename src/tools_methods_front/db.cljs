@@ -29,5 +29,11 @@
    :genetic-markers     []
    :treatment-loading?  false
    :treatment-error     nil
-   :treatment-result    nil})
+   :treatment-result    nil
+
+   ;;Chatbot
+   :question nil
+   :answer nil
+   :answer-loading? false
+   :answer-error nil})
 
