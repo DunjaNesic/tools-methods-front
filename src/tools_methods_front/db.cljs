@@ -2,15 +2,15 @@
 
 (def default-db
   {;; 1-to-1 chat
-   :one-to-one {:sender   "aaa@gmail.com"
+   :one-to-one {:sender   ""
                 :receiver "bbb@gmail.com"
-                :messages [{:message "How are you?", :sender "aaa@gmail.com", :timestamp 1735910604777, :timestamp-str "2025-01-03 14:23:24"}]
+                :messages []
                 :user-input "dunja"
                 :loading?  false
                 :error     nil}
 
    ;; Group chat
-   :group-chat {:user-email "aaa@gmail.com"
+   :group-chat {:user-email ""
                 :messages   []
                 :user-input ""
                 :joined?    false
@@ -35,5 +35,10 @@
    :question nil
    :answer nil
    :answer-loading? false
-   :answer-error nil})
+   :answer-error nil
+
+   ;;Login
+   :logged-in? false
+   :user nil
+   :login-error nil})
 

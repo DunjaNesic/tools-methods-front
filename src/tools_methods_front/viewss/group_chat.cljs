@@ -1,10 +1,11 @@
 (ns tools-methods-front.viewss.group-chat
   (:require
+   [tools-methods-front.subs :as subs]
    [re-frame.core :as re-frame]))
 
 (defn group-chat-panel []
   ;;bukv ne kapiram razliku izmedju :: i :, oba rade
-  (let [user-email  @(re-frame/subscribe [:group-user-email])
+  (let [user-email  @(re-frame/subscribe [::subs/user])
         messages    @(re-frame/subscribe [:group-messages])
         joined?     @(re-frame/subscribe [:group-joined?])
         loading?    @(re-frame/subscribe [:group-loading?])

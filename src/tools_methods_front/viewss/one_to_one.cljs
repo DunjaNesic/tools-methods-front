@@ -5,7 +5,7 @@
    [tools-methods-front.subs :as subs]))
 
 (defn one-to-one-chat-panel []
-  (let [sender       (re-frame/subscribe [::subs/one-to-one-sender])
+  (let [sender       (re-frame/subscribe [::subs/user])
         receiver     (re-frame/subscribe [::subs/one-to-one-receiver])
         messages     (re-frame/subscribe [::subs/one-to-one-messages])
         loading?     (re-frame/subscribe [::subs/one-to-one-loading?])

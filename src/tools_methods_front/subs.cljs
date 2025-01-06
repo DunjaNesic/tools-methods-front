@@ -142,3 +142,18 @@
  ::answer-error
  (fn [db _]
    (:answer-error db)))
+
+(re-frame/reg-sub
+ ::logged-in?
+ (fn [db _]
+   (:logged-in? db)))
+
+(re-frame/reg-sub
+ ::user
+ (fn [db _]
+   (:user db)))
+
+(re-frame/reg-sub
+ ::login-error
+ (fn [db _]
+   (:login-error db)))

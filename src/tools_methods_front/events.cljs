@@ -16,9 +16,7 @@
 (re-frame/reg-event-db
  ::update-1to1-sender
  (fn [db [_ new-sender]]
-   (println "Updating sender to: " new-sender)
    (assoc-in db [:one-to-one :sender] new-sender)))
-
 
 (re-frame/reg-event-db
  ::update-1to1-receiver
@@ -33,7 +31,7 @@
 (re-frame/reg-event-fx
  ::start-1to1
  (fn [{:keys [db]} [_]]
-   (let [sender   (get-in db [:one-to-one :sender])
+   (let [sender   (:user db)
          receiver (get-in db [:one-to-one :receiver])]
      {:db (assoc-in db [:one-to-one :loading?] true)
       :http-xhrio
@@ -66,7 +64,7 @@
 (re-frame/reg-event-fx
  ::send-1to1-message
  (fn [{:keys [db]} [_]]
-   (let [sender   (get-in db [:one-to-one :sender])
+   (let [sender   (:user db)
          receiver (get-in db [:one-to-one :receiver])
          msg      (get-in db [:one-to-one :user-input])]
      {:db (-> db
@@ -89,7 +87,7 @@
  (fn [db [_ original-msg response]]
    (-> db
        (update-in [:one-to-one :messages]
-                  conj {:sender (get-in db [:one-to-one :sender])
+                  conj {:sender (:user db)
                         :message original-msg})
        (assoc-in [:one-to-one :loading?] false)
        (assoc-in [:one-to-one :error] nil))))
@@ -105,7 +103,7 @@
 (re-frame/reg-event-fx
  ::show-1to1-messages
  (fn [{:keys [db]} [_]]
-   (let [sender   (get-in db [:one-to-one :sender])
+   (let [sender   (:user db)
          receiver (get-in db [:one-to-one :receiver])]
      {:db (assoc-in db [:one-to-one :loading?] true)
       :http-xhrio
@@ -150,7 +148,7 @@
 (re-frame/reg-event-fx
  :join-group
  (fn [{:keys [db]} [_]]
-   (let [user-email (get-in db [:group-chat :user-email])]
+   (let [user-email (:user db)]
      {:db (assoc-in db [:group-chat :loading?] true)
       :http-xhrio
       {:method          :post
@@ -180,7 +178,7 @@
 (re-frame/reg-event-fx
  :send-group-message
  (fn [{:keys [db]} [_]]
-   (let [user-email (get-in db [:group-chat :user-email])
+   (let [user-email (:user db)
          msg        (get-in db [:group-chat :user-input])]
      {:db (-> db
               (assoc-in [:group-chat :loading?] false)
@@ -200,7 +198,7 @@
  :send-group-success
  (fn [db [_ original-msg response]]
    (update-in db [:group-chat :messages]
-              conj {:sender (get-in db [:group-chat :user-email])
+              conj {:sender (:user db)
                     :message original-msg})))
 
 (re-frame/reg-event-db
@@ -242,7 +240,7 @@
 (re-frame/reg-event-fx
  :leave-group
  (fn [{:keys [db]} [_]]
-   (let [user-email (get-in db [:group-chat :user-email])]
+   (let [user-email (:user db)]
      {:db (assoc-in db [:group-chat :loading?] true)
       :http-xhrio
       {:method          :post
@@ -417,3 +415,27 @@
        (assoc :answer-loading? false)
        (assoc :answer-error
               (str "Error getting an answer: " (pr-str error-response))))))
+
+(re-frame/reg-event-fx
+ ::login
+ (fn [{:keys [db]} [_ email password]]
+   {:http-xhrio {:method          :post
+                 :uri             "http://localhost:3000/login"
+                 :params          {:email email :password password}
+                 :format          (json-request-format)
+                 :response-format (json-response-format {:keywords? true})
+                 :on-success      [::login-success]
+                 :on-failure      [::login-failure]}
+    :db (assoc db :login-error nil)}))
+
+(re-frame/reg-event-db
+ ::login-success
+ (fn [db [_ response]]
+   (-> db
+       (assoc :logged-in? true
+              :user (:patient/email (:user response))))))
+
+(re-frame/reg-event-db
+ ::login-failure
+ (fn [db [_ error]]
+   (assoc db :login-error (:message error))))
