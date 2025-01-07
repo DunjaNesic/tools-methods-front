@@ -157,3 +157,18 @@
  ::login-error
  (fn [db _]
    (:login-error db)))
+
+(re-frame/reg-sub
+ ::role
+ (fn [db _]
+   (:user db)))
+
+(re-frame/reg-sub
+ ::cost
+ (fn [db _]
+   (:user db)))
+
+(re-frame/reg-sub
+ ::cost-message
+ (fn [db _]
+   (:user db)))

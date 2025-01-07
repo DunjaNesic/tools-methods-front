@@ -433,9 +433,71 @@
  (fn [db [_ response]]
    (-> db
        (assoc :logged-in? true
-              :user (:patient/email (:user response))))))
+              :user (:userr/email (:user response))
+              :role (:userr/user_type (:user response))))))
 
 (re-frame/reg-event-db
  ::login-failure
  (fn [db [_ error]]
    (assoc db :login-error (:message error))))
+
+(re-frame/reg-event-fx
+ ::start-charging
+ (fn [{:keys [db]} [_]]
+   (let [sender   (:user db)
+         receiver (get-in db [:one-to-one :receiver])]
+     {:db (assoc-in db [:one-to-one :loading?] true)
+      :http-xhrio
+      {:method          :post
+       :uri             "http://localhost:3000/chat"
+       :params          {:action   "start-charging"
+                         :sender   sender
+                         :receiver receiver}
+       :format          (json-request-format)
+       :response-format (json-response-format {:keywords? true})
+       :on-success      [::start-charging-success]
+       :on-failure      [::start-charging-failure]}})))
+
+(re-frame/reg-event-db
+ ::start-charging-success
+ (fn [db [_ response]]
+   (-> db
+       (assoc :cost-message (:message response)
+              :cost-error nil
+              :cost (:cost response)))))
+
+(re-frame/reg-event-db
+ ::start-charging-failure
+ (fn [db [_ error]]
+   (assoc db :cost-error (:message error))))
+
+(re-frame/reg-event-fx
+ ::stop-charging
+ (fn [{:keys [db]} [_]]
+   (let [sender   (:user db)
+         receiver (get-in db [:one-to-one :receiver])]
+     {:db (assoc-in db [:one-to-one :loading?] true)
+      :http-xhrio
+      {:method          :post
+       :uri             "http://localhost:3000/chat"
+       :params          {:action   "stop-charging"
+                         :sender   sender
+                         :receiver receiver}
+       :format          (json-request-format)
+       :response-format (json-response-format {:keywords? true})
+       :on-success      [::stop-charging-success]
+       :on-failure      [::stop-charging-failure]}})))
+
+(re-frame/reg-event-db
+ ::stop-charging-success
+ (fn [db [_ response]]
+   (-> db
+       (assoc :cost-message (:message response)
+              :cost-error nil
+              :cost (:cost response)))))
+
+(re-frame/reg-event-db
+ ::stop-charging-failure
+ (fn [db [_ error]]
+   (assoc db :cost-error (:message error))))
+

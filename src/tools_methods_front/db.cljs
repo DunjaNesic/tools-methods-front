@@ -40,5 +40,11 @@
    ;;Login
    :logged-in? false
    :user nil
-   :login-error nil})
+   :login-error nil
+   :role nil
+
+   ;;Cost for chat
+   :cost 0
+   :cost-message nil
+   :cost-error nil})
 
