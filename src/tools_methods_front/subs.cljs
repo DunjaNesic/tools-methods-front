@@ -73,11 +73,6 @@
    (:symptoms db)))
 
 (re-frame/reg-sub
- ::checker-loading?
- (fn [db _]
-   (:checker-loading? db)))
-
-(re-frame/reg-sub
  ::checker-error
  (fn [db _]
    (:checker-error db)))
@@ -86,11 +81,6 @@
  ::checker-result
  (fn [db _]
    (:checker-result db)))
-
-(re-frame/reg-sub
- ::local-symptom
- (fn [db _]
-   (:local-symptom db)))
 
 ;; Personalized treatment
 (re-frame/reg-sub

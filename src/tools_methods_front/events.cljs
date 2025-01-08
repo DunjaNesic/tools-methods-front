@@ -1,5 +1,6 @@
 (ns tools-methods-front.events
   (:require
+   [clojure.string]
    [re-frame.core :as re-frame]
    [day8.re-frame.http-fx]
    [tools-methods-front.db :as db]
@@ -278,49 +279,44 @@
 
 (re-frame/reg-event-fx
  ::check-symptoms
- (fn [{:keys [db]} [_]]
-   (let [user-symptoms (:symptoms db)]
+ (fn [{:keys [db]} [_ local-symptoms]]
+   (let [user-symptoms (if (string? local-symptoms)
+                         (->> (clojure.string/split local-symptoms #",")
+                              (map #(-> %
+                                        clojure.string/trim
+                                        (clojure.string/replace #"\s+" "_")))
+                              (vec))
+                         local-symptoms)
+         request-data   {:method          :post
+                         :uri             "http://localhost:3000/check-symptoms"
+                         :params          {:symptoms user-symptoms
+                                           :user-id 1}
+                         :format          (json-request-format)
+                         :response-format (json-response-format {:keywords? true})
+                         :on-success      [::check-symptoms-success]
+                         :on-failure      [::check-symptoms-failure]}]
      {:db (-> db
-              (assoc :checker-loading? true)
               (assoc :checker-error nil)
               (assoc :checker-result nil))
-      :http-xhrio
-      {:method          :post
-       :uri             "http://localhost:3000/check-symptoms"
-       :params          {:symptoms user-symptoms}
-       :format          (json-request-format)
-       :response-format (json-response-format {:keywords? true})
-       :on-success      [::check-symptoms-success]
-       :on-failure      [::check-symptoms-failure]}})))
+      :http-xhrio request-data})))
 
 (re-frame/reg-event-db
  ::check-symptoms-success
  (fn [db [_ response]]
-   (-> db
-       (assoc :checker-loading? false)
-       (assoc :checker-error nil)
-       (assoc :checker-result response))))
+   (do
+     (js/console.log "Success response:" response)
+     (-> db
+         (assoc :checker-error nil)
+         (assoc :checker-result response)))))
 
 (re-frame/reg-event-db
  ::check-symptoms-failure
  (fn [db [_ error-response]]
-   (-> db
-       (assoc :checker-loading? false)
-       (assoc :checker-error
-              (str "Error checking symptoms: " (pr-str error-response))))))
-
-(re-frame/reg-event-db
- ::local-symptom-input
- (fn [db [_ val]]
-   (assoc db :local-symptom val)))
-
-(re-frame/reg-event-db
- ::add-symptom
- (fn [db _]
-   (let [symp (get db :local-symptom)]
+   (do
+     (js/console.log "Failure response:" error-response)
      (-> db
-         (update :symptoms conj symp)
-         (assoc :local-symptom "")))))
+         (assoc :checker-error
+                (str "Error checking symptoms: " (pr-str error-response)))))))
 
 ;;Personalized treatment
 
@@ -442,26 +438,46 @@
    (assoc db :login-error (get-in error [:response :message]))))
 
 (re-frame/reg-event-fx
+ ::logout
+ (fn [{:keys [db]} [_ email]]
+   {:http-xhrio {:method          :post
+                 :uri             "http://localhost:3000/logout"
+                 :params          {:email email}
+                 :format          (json-request-format)
+                 :response-format (json-response-format {:keywords? true})
+                 :on-success      [::logout-success]
+                 :on-failure      [::logout-failure]}
+    :db (assoc db :user nil
+               :role ""
+               :name ""
+               :specialty "")}))
+
+(re-frame/reg-event-db
+ ::logout-success
+ (fn [db [_ response]]
+   (assoc db :logged-in? false)))
+
+(re-frame/reg-event-db
+ ::logout-failure
+ (fn [db [_ error]]
+   (println "Logout failure error:" error)
+   db))
+
+(re-frame/reg-event-fx
  ::register
  (fn [{:keys [db]} [_ name new-email new-pass role specialty]]
-   (do
-     (js/console.log "Request body:" {:name name
-                                      :email new-email
-                                      :password new-pass
-                                      :user-type role
-                                      :specialty specialty})
-     {:http-xhrio {:method          :post
-                   :uri             "http://localhost:3000/register"
-                   :params          {:name name
-                                     :email new-email
-                                     :password new-pass
-                                     :user_type role
-                                     :specialty specialty}
-                   :format          (json-request-format)
-                   :response-format (json-response-format {:keywords? true})
-                   :on-success      [::registration-success]
-                   :on-failure      [::registration-failure]}
-      :db (assoc db :login-error nil)})))
+   {:http-xhrio {:method          :post
+                 :uri             "http://localhost:3000/register"
+                 :params          {:name name
+                                   :email new-email
+                                   :password new-pass
+                                   :user_type role
+                                   :specialty specialty}
+                 :format          (json-request-format)
+                 :response-format (json-response-format {:keywords? true})
+                 :on-success      [::registration-success]
+                 :on-failure      [::registration-failure]}
+    :db (assoc db :login-error nil)}))
 
 
 (re-frame/reg-event-db
@@ -473,6 +489,11 @@
  ::registration-failure
  (fn [db [_ error]]
    (assoc db :registration-error (get-in error [:response :message]))))
+
+(re-frame/reg-event-db
+ ::clear-registration-succ
+ (fn [db _]
+   (assoc db :registration-succ nil)))
 
 (re-frame/reg-event-fx
  ::start-charging

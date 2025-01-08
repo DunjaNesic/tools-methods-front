@@ -19,7 +19,6 @@
 
    ;; Symptom checker
    :symptoms            []
-   :checker-loading?    false
    :checker-error       nil
    :checker-result      nil
 
@@ -40,6 +39,7 @@
    ;;Login
    :logged-in? false
    :user nil
+   :user-id 0
    :login-error nil
    :role ""
    :name ""

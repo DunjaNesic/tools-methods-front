@@ -13,9 +13,7 @@ body {
 .main-panel {
     display: flex;
     flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    background-color: #FF69B4;
+    background-color: var(--secondary-color);
 }
 
 .main-panel h2 {

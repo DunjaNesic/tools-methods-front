@@ -16,7 +16,19 @@
         registration-succ (re-frame/subscribe [::subs/registration-succ])
         registration-error (re-frame/subscribe [::subs/registration-error])
         login-error (re-frame/subscribe [::subs/login-error])]
+
     (fn []
+      (when @registration-succ
+        (js/setTimeout
+         (fn []
+           (reset! name "")
+           (reset! new-email "")
+           (reset! new-pass "")
+           (reset! role "patient")
+           (reset! specialty "")
+           (re-frame/dispatch [::events/clear-registration-succ]))
+         3000))
+
       [:div.welcome-wrapper
        [:div.login-panel
         [:h2 "Welcome back"]
@@ -77,5 +89,5 @@
          {:on-click #(re-frame/dispatch [::events/register @name @new-email @new-pass @role @specialty])
           :disabled (or (empty? @name)
                         (empty? @new-email)
-                        (empty? @new-pass))} ;; Dugme je disabled ako bilo koje polje nije popunjeno
+                        (empty? @new-pass))}
          "Register"]]])))
