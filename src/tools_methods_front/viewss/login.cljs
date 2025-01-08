@@ -11,8 +11,10 @@
         new-email (reagent/atom "")
         new-pass (reagent/atom "")
         name (reagent/atom "")
-        role (reagent/atom "pacient")
-        specialty (reagent/atom nil)
+        role (reagent/atom "patient")
+        specialty (reagent/atom "")
+        registration-succ (re-frame/subscribe [::subs/registration-succ])
+        registration-error (re-frame/subscribe [::subs/registration-error])
         login-error (re-frame/subscribe [::subs/login-error])]
     (fn []
       [:div.welcome-wrapper
@@ -47,10 +49,10 @@
           [:label
            [:input {:type "radio"
                     :name "role"
-                    :value "pacient"
-                    :checked (= @role "pacient")
-                    :on-change #(reset! role "pacient")}]
-           " Pacient"]
+                    :value "patient"
+                    :checked (= @role "patient")
+                    :on-change #(reset! role "patient")}]
+           " Patient"]
           [:label
            [:input {:type "radio"
                     :name "role"
@@ -63,7 +65,17 @@
          [:input {:type "text"
                   :value @specialty
                   :on-change #(reset! specialty (-> % .-target .-value))
-                  :disabled (= @role "pacient")}]]
+                  :disabled (= @role "patient")
+                  :style (if (= @role "patient")
+                           {:border "1px solid #d3d3d3"}
+                           {:border "none"})}]]
+        (when @registration-error
+          [:div.error @registration-error])
+        (when @registration-succ
+          [:div.succ @registration-succ])
         [:button.btn.green-btn
-         {:on-click #(re-frame/dispatch [::events/register @name @new-email @new-pass @role @specialty])}
+         {:on-click #(re-frame/dispatch [::events/register @name @new-email @new-pass @role @specialty])
+          :disabled (or (empty? @name)
+                        (empty? @new-email)
+                        (empty? @new-pass))} ;; Dugme je disabled ako bilo koje polje nije popunjeno
          "Register"]]])))

@@ -164,6 +164,16 @@
    (:user db)))
 
 (re-frame/reg-sub
+ ::registration-error
+ (fn [db _]
+   (:registration-error db)))
+
+(re-frame/reg-sub
+ ::registration-succ
+ (fn [db _]
+   (:registration-succ db)))
+
+(re-frame/reg-sub
  ::cost
  (fn [db _]
    (:user db)))

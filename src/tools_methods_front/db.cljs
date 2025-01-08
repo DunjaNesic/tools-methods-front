@@ -41,9 +41,11 @@
    :logged-in? false
    :user nil
    :login-error nil
-   :role nil
-   :name nil
-   :specialty nil
+   :role ""
+   :name ""
+   :specialty ""
+   :registration-error nil
+   :registration-succ nil
 
    ;;Cost for chat
    :cost 0

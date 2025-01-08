@@ -443,16 +443,36 @@
 
 (re-frame/reg-event-fx
  ::register
- (fn [{:keys [db]} [_ name email password role specialty]]
-   {:http-xhrio {:method          :post
-                 :uri             "http://localhost:3000/login"
-                 :params          {:name name :email email :password password :user-type role :specialty specialty}
-                 :format          (json-request-format)
-                 :response-format (json-response-format {:keywords? true})
-                 :on-success      [::login-success]
-                 :on-failure      [::login-failure]}
-    :db (assoc db :login-error nil)}))
+ (fn [{:keys [db]} [_ name new-email new-pass role specialty]]
+   (do
+     (js/console.log "Request body:" {:name name
+                                      :email new-email
+                                      :password new-pass
+                                      :user-type role
+                                      :specialty specialty})
+     {:http-xhrio {:method          :post
+                   :uri             "http://localhost:3000/register"
+                   :params          {:name name
+                                     :email new-email
+                                     :password new-pass
+                                     :user_type role
+                                     :specialty specialty}
+                   :format          (json-request-format)
+                   :response-format (json-response-format {:keywords? true})
+                   :on-success      [::registration-success]
+                   :on-failure      [::registration-failure]}
+      :db (assoc db :login-error nil)})))
 
+
+(re-frame/reg-event-db
+ ::registration-success
+ (fn [db [_ response]]
+   (assoc db :registration-succ (:message response))))
+
+(re-frame/reg-event-db
+ ::registration-failure
+ (fn [db [_ error]]
+   (assoc db :registration-error (get-in error [:response :message]))))
 
 (re-frame/reg-event-fx
  ::start-charging
