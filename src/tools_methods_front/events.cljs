@@ -439,7 +439,20 @@
 (re-frame/reg-event-db
  ::login-failure
  (fn [db [_ error]]
-   (assoc db :login-error (:message error))))
+   (assoc db :login-error (get-in error [:response :message]))))
+
+(re-frame/reg-event-fx
+ ::register
+ (fn [{:keys [db]} [_ name email password role specialty]]
+   {:http-xhrio {:method          :post
+                 :uri             "http://localhost:3000/login"
+                 :params          {:name name :email email :password password :user-type role :specialty specialty}
+                 :format          (json-request-format)
+                 :response-format (json-response-format {:keywords? true})
+                 :on-success      [::login-success]
+                 :on-failure      [::login-failure]}
+    :db (assoc db :login-error nil)}))
+
 
 (re-frame/reg-event-fx
  ::start-charging

@@ -42,6 +42,8 @@
    :user nil
    :login-error nil
    :role nil
+   :name nil
+   :specialty nil
 
    ;;Cost for chat
    :cost 0
