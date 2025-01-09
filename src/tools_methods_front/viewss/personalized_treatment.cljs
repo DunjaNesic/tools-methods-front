@@ -9,7 +9,6 @@
   (let [medical-conditions @(re-frame/subscribe [::subs/medical-conditions])
         lifestyle          @(re-frame/subscribe [::subs/lifestyle])
         genetic-markers    @(re-frame/subscribe [::subs/genetic-markers])
-        treatment-loading? @(re-frame/subscribe [::subs/treatment-loading?])
         treatment-error    @(re-frame/subscribe [::subs/treatment-error])
         treatment-result   @(re-frame/subscribe [::subs/treatment-result])]
 
@@ -23,9 +22,6 @@
        [:br]
        [:span "HEALTH PLAN"]]
 
-
-      (when treatment-loading?
-        [:p "Loading recommendations..."])
       (when treatment-error
         [:div.error treatment-error])
 
@@ -43,7 +39,7 @@
 
       [:div.lbl
        [:label "Select your lifestyle"]
-       [:select {:value (str (or lifestyle ""))
+       [:select {:value (name (or lifestyle ""))
                  :on-change #(let [val (-> % .-target .-value)]
                                (re-frame/dispatch [::events/set-lifestyle (keyword val)]))}
         [:option {:value ""} "click me"]
@@ -53,7 +49,7 @@
       [:div.lbl
        [:label "Do you have any genetic markers?"]
        [:input {:type "text"
-                :placeholder "e.g. APOE, BRCA1..."
+                :placeholder "e.g. APOE-e4, LCT, FTO..."
                 :on-change #(let [val (-> % .-target .-value)
                                   splitted (-> val
                                                (clojure.string/split #",")
@@ -73,9 +69,13 @@
        (when treatment-result
          [:div.recommendation
           [:h4 "OUR RECOMMENDATION FOR YOUR DIET: "]
-          [:p (clojure.string/join ", " (:diet treatment-result))]
+          [:p (if (empty? (:diet treatment-result))
+                "Nothing"
+                (clojure.string/join ", " (:diet treatment-result)))]
           [:h4 "FOR YOUR EXERCISES: "]
-          [:p (clojure.string/join ", " (:exercise treatment-result))]
+          [:p (if (empty? (:exercise treatment-result))
+                "Nothing"
+                (clojure.string/join ", " (:exercise treatment-result)))]
           [:h4 "FOR MEDICATIONS (TAKE THIS WITH A GRAIN OF SALT THO): "]
           [:p (if (empty? (:medications treatment-result))
                 "Nothing"

@@ -99,11 +99,6 @@
    (:genetic-markers db)))
 
 (re-frame/reg-sub
- ::treatment-loading?
- (fn [db _]
-   (:treatment-loading? db)))
-
-(re-frame/reg-sub
  ::treatment-error
  (fn [db _]
    (:treatment-error db)))

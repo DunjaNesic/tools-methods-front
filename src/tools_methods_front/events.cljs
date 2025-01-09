@@ -336,7 +336,6 @@
          lifestyle       (:lifestyle db)
          genetic-markers (:genetic-markers db)]
      {:db (-> db
-              (assoc :treatment-loading? true)
               (assoc :treatment-error nil)
               (assoc :treatment-result nil))
       :http-xhrio
@@ -354,18 +353,13 @@
  ::recommend-treatment-success
  (fn [db [_ response]]
    (-> db
-       (assoc :treatment-loading? false)
        (assoc :treatment-error nil)
        (assoc :treatment-result response))))
 
 (re-frame/reg-event-db
  ::recommend-treatment-failure
- (fn [db [_ error-response]]
-   (-> db
-       (assoc :treatment-loading? false)
-       (assoc :treatment-error
-              (str "Error getting recommendations: " (pr-str error-response))))))
-
+ (fn [db [_ error]]
+   (assoc db :treatment-error (get-in error [:response :message]))))
 
 ;;Healthcare chatbot
 
@@ -561,17 +555,12 @@
 (re-frame/reg-event-db
  ::specialists-loaded
  (fn [db [_ response]]
-   (do
-     (js/console.log "Response received for specialists:" response)
-     (assoc db :specialists (:specialists response)))))
+   (assoc db :specialists (:specialists response))))
 
 (re-frame/reg-event-db
  ::specialists-failed-load
  (fn [db [_ error]]
-   (do
-     (js/console.log "Error loading specialists:" error)
-     (assoc db :specialists-error error))))
-
+   (assoc db :specialists-error error)))
 
 (re-frame/reg-event-fx
  ::select-specialty

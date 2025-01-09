@@ -32,3 +32,9 @@
     background-color: white;
     border: none;
 }
+
+.upper-row {
+    display: flex;
+    flex-direction: column;
+    align-items: end;
+}
