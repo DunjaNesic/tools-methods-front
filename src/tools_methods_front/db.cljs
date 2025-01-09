@@ -50,5 +50,8 @@
    ;;Cost for chat
    :cost 0
    :cost-message nil
-   :cost-error nil})
+   :cost-error nil
+
+   :specialists nil
+   :specialists-error nil})
 

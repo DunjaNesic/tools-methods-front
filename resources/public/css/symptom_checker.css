@@ -1,43 +1,40 @@
 .symptom-checker-container {
+    min-height: 32rem;
     display: flex;
     margin-top: 7rem;
-    padding: 1.5rem;
+    padding: 3rem 4rem;
     justify-content: space-around;
+    gap: 5rem;
 }
 
-.symptom-checker-container.left {
+.symptom-checker-container .left {
     flex: 2;
+    display: flex;
+    flex-direction: column;
+    align-items: self-start;
+    justify-content: space-between;
 }
 
-.symptom-checker-container.right {
+.symptom-checker-container .right {
     flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+}
+
+.symptom-checker-container .lbl {
+    font-size: 1.2rem;
+}
+
+.symptom-checker-container .lbl input {
+    width: 85%;
 }
 
 .symptom-checker-container h2 {
-    text-align: center;
-    color: #04103B;
+    color: var(--light-blue);
     margin-bottom: 1rem;
-    font-size: 1.5rem;
-}
-
-.symptom-checker-container p {
-    font-size: 1rem;
-    line-height: 1.5;
-}
-
-.symptom-checker-container p.error {
-    color: red;
-    font-weight: bold;
-}
-
-.symptom-checker-container input[type="text"] {
-    width: 100%;
-    padding: 0.5rem;
-    font-size: 1rem;
-    border: 0.0625rem solid #ccc;
-    border-radius: 0.25rem;
-    margin-bottom: 1rem;
-    box-sizing: border-box;
+    text-align: end;
+    font-size: 3rem;
 }
 
 .symptom-checker-container .diagnosis-result {
@@ -50,4 +47,13 @@
     color: #04103B;
     font-size: 1.25rem;
     margin-bottom: 0.5rem;
+}
+
+.diagnoses-res {
+    max-width: 55%;
+}
+
+.diagnoses-res p {
+    font-size: 1.1rem;
+    line-height: 1.5;
 }

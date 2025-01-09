@@ -303,20 +303,14 @@
 (re-frame/reg-event-db
  ::check-symptoms-success
  (fn [db [_ response]]
-   (do
-     (js/console.log "Success response:" response)
-     (-> db
-         (assoc :checker-error nil)
-         (assoc :checker-result response)))))
+   (-> db
+       (assoc :checker-error nil)
+       (assoc :checker-result response))))
 
 (re-frame/reg-event-db
  ::check-symptoms-failure
- (fn [db [_ error-response]]
-   (do
-     (js/console.log "Failure response:" error-response)
-     (-> db
-         (assoc :checker-error
-                (str "Error checking symptoms: " (pr-str error-response)))))))
+ (fn [db [_ error]]
+   (assoc db :checker-error (get-in error [:response :message]))))
 
 ;;Personalized treatment
 
@@ -554,4 +548,23 @@
  ::stop-charging-failure
  (fn [db [_ error]]
    (assoc db :cost-error (:message error))))
+
+(re-frame/reg-event-fx
+ ::load-specialists
+ (fn [_ _]
+   {:http-xhrio {:method          :get
+                 :uri             "http://localhost:3000/specialists"
+                 :response-format (json-response-format {:keywords? true})
+                 :on-success      [::specialists-loaded]
+                 :on-failure      [::specialists-failed-load]}}))
+
+(re-frame/reg-event-db
+ ::specialists-loaded
+ (fn [db [_ response]]
+   (assoc db :specialists (:specialists response))))
+
+(re-frame/reg-event-db
+ ::specialists-failed-load
+ (fn [db [_ error]]
+   (assoc db :specialists-error error)))
 

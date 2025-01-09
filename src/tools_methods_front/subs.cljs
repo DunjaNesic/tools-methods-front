@@ -172,3 +172,8 @@
  ::cost-message
  (fn [db _]
    (:user db)))
+
+(re-frame/reg-sub
+ ::specialists
+ (fn [db _]
+   (:specialists db)))

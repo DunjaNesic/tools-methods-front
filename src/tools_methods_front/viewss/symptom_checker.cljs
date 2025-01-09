@@ -9,34 +9,38 @@
 (defn symptom-checker-panel []
   (let [symptoms        @(re-frame/subscribe [::subs/symptoms])
         local-symptoms (reagent/atom "")
-        error-msg       @(re-frame/subscribe [::subs/checker-error])
-        checker-result  @(re-frame/subscribe [::subs/checker-result])]
+        error-msg       (re-frame/subscribe [::subs/checker-error])
+        checker-result  (re-frame/subscribe [::subs/checker-result])]
 
     (fn []
-
       [:div.symptom-checker-container
        [:div.left
-        (when error-msg
-          [:p {:style {:color "red"}} error-msg])
+        [:div
+         (when @error-msg
+           [:div.error @error-msg])
 
-        [:div.lbl
-         [:label "Tell us your symptoms"]
-         [:input {:type "text"
-                  :placeholder "e.g. back_pain, cough..."
-                  :value @local-symptoms :on-change #(reset! local-symptoms (-> % .-target .-value))}]]
+         [:div.lbl
+          [:label "Tell us your symptoms"]
+          [:input {:type "text"
+                   :placeholder "e.g. back_pain, cough..."
+                   :value @local-symptoms :on-change #(reset! local-symptoms (-> % .-target .-value))}]]]
+
+        (when @checker-result
+          (let [{:keys [diagnoses specialists]} @checker-result
+                formatted-diagnoses (->> diagnoses
+                                         (keys)
+                                         (map name)
+                                         (str/join ", "))
+                formatted-specialists (->> specialists
+                                           (map str/capitalize)
+                                           (str/join ", "))]
+            [:div.diagnoses-res
+             [:p (str "You have been diagnosed with " formatted-diagnoses
+                      ", and it is recommended that you visit " formatted-specialists ".")]]))
 
         [:button.btn.green-btn {:on-click #(re-frame/dispatch [::events/check-symptoms @local-symptoms])}
-         "Check Symptoms"]
+         "Check Symptoms"]]
 
-        (when checker-result
-          (let [{:keys [diagnoses specialists error]} checker-result]
-            [:div
-             [:h3 "Diagnosis Result"]
-             (if error
-               [:p {:style {:color "red"}} error]
-               [:div
-                [:p (str "Diagnoses: " (pr-str diagnoses))]
-                [:p (str "Suggested Specialists: " (pr-str specialists))]])]))]
        [:div.right
         [:h2 "FOR A BETTER TOMORROW"]
         [:button.btn.green-btn "Get personalized plan"]]])))
