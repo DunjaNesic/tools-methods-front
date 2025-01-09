@@ -13,11 +13,10 @@
    [nav]
    [symptom-checker-panel]
    [specs]
+   [personalized-treatment-panel]
    [:hr]
    [one-to-one-chat-panel]
    [:hr]
    [group-chat-panel]
-   [:hr]
-   [personalized-treatment-panel]
    [:hr]
    [chatbot-panel]])

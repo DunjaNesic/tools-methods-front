@@ -1,73 +1,34 @@
 .personalized-treatment-container {
-    font-family: Arial, sans-serif;
-    line-height: 1.6;
+    display: flex;
+    justify-content: space-evenly;
     padding: 2rem;
-    max-width: 40rem;
-    margin-bottom: 2rem;
-    background-color: #f9f9f9;
-    border-radius: 0.5rem;
-    box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.1);
 }
 
 .personalized-treatment-container h2 {
-    font-size: 2rem;
+    color: var(--light-blue);
     margin-bottom: 1rem;
-    color: #04103b;
+    text-align: start;
+    font-size: 3rem;
 }
 
-.personalized-treatment-container p {
-    margin-bottom: 0.8rem;
-    color: #333;
+.recommendation {
+    max-width: 22rem;
+    min-height: 20rem;
+    background: linear-gradient(135deg, rgba(81, 111, 150, 1) 50%, rgba(102, 137, 175, 1) 50%);
+    padding: 1rem 2rem;
+    color: var(--secondary-color);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    border-radius: 0.5rem;
 }
 
-.personalized-treatment-container input,
-.personalized-treatment-container select {
-    width: 100%;
-    padding: 0.8rem;
-    margin-bottom: 1rem;
-    font-size: 1rem;
-    border: 1px solid #ccc;
-    border-radius: 0.4rem;
-    box-sizing: border-box;
+.right-col {
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+    align-items: end;
 }
 
-.personalized-treatment-container input::placeholder {
-    color: #888;
-}
-
-.personalized-treatment-container button {
-    padding: 0.5rem 0.75rem;
-    margin: 0.25rem 0.25rem 0.5rem 0;
+.left-col .lbl select {
+    background-color: white;
     border: none;
-    border-radius: 0.25rem;
-    background-color: #de5798;
-    color: white;
-    cursor: pointer;
-    font-size: 1rem;
-}
-
-.personalized-treatment-container button:hover {
-    background-color: #c24d85;
-}
-
-.personalized-treatment-container .error {
-    color: red;
-    font-size: 1rem;
-}
-
-.personalized-treatment-container .result {
-    background-color: #e7f4e4;
-    padding: 1rem;
-    border-radius: 0.4rem;
-    margin-top: 1.5rem;
-}
-
-.personalized-treatment-container .result h3 {
-    font-size: 1.5rem;
-    margin-bottom: 0.8rem;
-}
-
-.personalized-treatment-container .result p {
-    font-size: 1rem;
-    color: #333;
 }

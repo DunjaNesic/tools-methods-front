@@ -86,6 +86,7 @@
 }
 
 select {
+    font-family: var(--font-family);
     padding: 0.5rem 0.7rem;
     font-size: 1rem;
     border-radius: 5px;
