@@ -15,7 +15,7 @@
     (fn []
       [:div.symptom-checker-container
        [:div.left
-        [:div
+        [:div.wrapper
          (when @error-msg
            [:div.error @error-msg])
 

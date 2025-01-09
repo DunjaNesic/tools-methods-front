@@ -7,39 +7,71 @@
 }
 
 .specialist-grid {
-    padding: 2rem;
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    display: flex;
+    overflow-x: auto;
     gap: 1.5rem;
-    width: 100%;
-    max-width: 1200px
+    padding: 1rem;
+    scroll-behavior: smooth;
+    scrollbar-width: none;
 }
 
 .specialist-card {
-    background-color: #fff;
+    flex: 0 0 auto;
+    width: 12.5rem;
+    background-color: var(--secondary-color);
     border: 1px solid #ddd;
-    border-radius: 8px;
-    padding: 15px;
+    border-radius: 0.5rem;
+    padding: 1rem;
     text-align: center;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1)
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.scroll-container {
+    position: relative;
+    display: flex;
+    align-items: center;
+    width: 100%;
+}
+
+.scroll-btn {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    background-color: var(--secondary-color);
+    color: white;
+    border: none;
+    border-radius: 50%;
+    width: 2.5rem;
+    height: 2.5rem;
+    cursor: pointer;
+    z-index: 10;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.scroll-btn.left-btn {
+    left: 0.5rem;
+}
+
+.scroll-btn.right-btn {
+    right: 0.5rem;
 }
 
 .specialist-image {
     width: 100%;
-    max-width: 150px;
+    max-width: 10rem;
     height: auto;
     border-radius: 50%;
-    margin-bottom: 10px
+    margin-bottom: 0.5rem;
 }
 
 .specialist-card h3 {
-    font-size: 1.2em;
-    margin: 10px 0
+    font-size: 1.2rem;
+    margin: 0.5rem 0;
 }
 
 .specialist-card p {
-    font-size: 1em;
-    color: #666
+    font-size: 1rem;
+    color: #666;
 }
 
 .spec-header {
@@ -51,4 +83,25 @@
 
 .spec-header h1 {
     color: var(--secondary-color);
+}
+
+select {
+    padding: 0.5rem 0.7rem;
+    font-size: 1rem;
+    border-radius: 5px;
+    border: 1px solid #ddd;
+    background-color: var(--secondary-color);
+    color: var(--primary-color);
+    font-weight: bold;
+    cursor: pointer;
+    outline: none;
+    transition: border-color 0.2s ease;
+}
+
+select:focus {
+    border-color: var(--dark-purple);
+}
+
+option {
+    padding: 8px 12px;
 }

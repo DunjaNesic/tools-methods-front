@@ -561,10 +561,24 @@
 (re-frame/reg-event-db
  ::specialists-loaded
  (fn [db [_ response]]
-   (assoc db :specialists (:specialists response))))
+   (do
+     (js/console.log "Response received for specialists:" response)
+     (assoc db :specialists (:specialists response)))))
 
 (re-frame/reg-event-db
  ::specialists-failed-load
  (fn [db [_ error]]
-   (assoc db :specialists-error error)))
+   (do
+     (js/console.log "Error loading specialists:" error)
+     (assoc db :specialists-error error))))
+
+
+(re-frame/reg-event-fx
+ ::select-specialty
+ (fn [_ [_ selected-specialty]]
+   {:http-xhrio {:method          :get
+                 :uri             (str "http://localhost:3000/specialist?specialty=" selected-specialty)
+                 :response-format (json-response-format {:keywords? true})
+                 :on-success      [::specialists-loaded]
+                 :on-failure      [::specialists-failed-load]}}))
 

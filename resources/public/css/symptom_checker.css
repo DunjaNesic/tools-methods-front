@@ -27,7 +27,11 @@
 }
 
 .symptom-checker-container .lbl input {
-    width: 85%;
+    width: 70%;
+}
+
+.symptom-checker-container .left .wrapper {
+    width: 100%;
 }
 
 .symptom-checker-container h2 {
