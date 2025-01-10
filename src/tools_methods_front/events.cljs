@@ -571,3 +571,25 @@
                  :on-success      [::specialists-loaded]
                  :on-failure      [::specialists-failed-load]}}))
 
+(re-frame/reg-event-fx
+ ::get-history
+ (fn [{:keys [db]} [_]]
+   (let [user-id  (:user-id db)]
+     {:http-xhrio {:method          :post
+                   :params          {:user-id user-id}
+                   :uri             "http://localhost:3000/history"
+                   :format          (json-request-format)
+                   :response-format (json-response-format {:keywords? true})
+                   :on-success      [::history-success]
+                   :on-failure      [::history-failed]}})))
+
+(re-frame/reg-event-db
+ ::history-success
+ (fn [db [_ response]]
+   (js/console.log "Success response:" response)
+   (assoc db :symptom-history (:history response))))
+
+(re-frame/reg-event-db
+ ::history-failed
+ (fn [db [_ error]]
+   (js/console.log "Error history response:" error)))

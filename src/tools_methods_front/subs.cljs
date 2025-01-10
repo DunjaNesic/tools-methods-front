@@ -139,6 +139,12 @@
    (:user db)))
 
 (re-frame/reg-sub
+ ::user-id
+ (fn [db _]
+   (:user-id db)))
+
+
+(re-frame/reg-sub
  ::login-error
  (fn [db _]
    (:login-error db)))
@@ -172,4 +178,9 @@
  ::specialists
  (fn [db _]
    (:specialists db)))
+
+(re-frame/reg-sub
+ ::symptom-history
+ (fn [db _]
+   (:symptom-history db)))
 

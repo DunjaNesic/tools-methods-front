@@ -22,7 +22,7 @@
          [:div.lbl
           [:label "Tell us your symptoms"]
           [:input {:type "text"
-                   :placeholder "e.g. back_pain, cough..."
+                   :placeholder "e.g. back pain, cough, mild fever..."
                    :value @local-symptoms :on-change #(reset! local-symptoms (-> % .-target .-value))}]]]
 
         (when @checker-result

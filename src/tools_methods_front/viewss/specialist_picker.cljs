@@ -25,7 +25,6 @@
        (re-frame/dispatch [::events/load-specialists])))
 
     (fn []
-
       (when @spec-error
         [:div.error @spec-error])
 
