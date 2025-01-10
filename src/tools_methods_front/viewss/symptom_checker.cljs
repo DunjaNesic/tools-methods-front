@@ -7,9 +7,9 @@
    [re-frame.core :as re-frame]))
 
 (defn symptom-checker-panel []
-  (let [symptoms        @(re-frame/subscribe [::subs/symptoms])
-        local-symptoms (reagent/atom "")
+  (let [local-symptoms (reagent/atom "")
         error-msg       (re-frame/subscribe [::subs/checker-error])
+        ;; symptoms        @(re-frame/subscribe [::subs/symptoms])
         checker-result  (re-frame/subscribe [::subs/checker-result])]
 
     (fn []

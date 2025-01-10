@@ -373,7 +373,6 @@
  (fn [{:keys [db]} [_]]
    (let [question  (:question db)]
      {:db (-> db
-              (assoc :answer-loading? true)
               (assoc :answer-error nil))
       :http-xhrio
       {:method          :post
@@ -388,7 +387,6 @@
  ::chatbot-answer-success
  (fn [db [_ response]]
    (-> db
-       (assoc :answer-loading? false)
        (assoc :answer response)
        (assoc :answer-error nil))))
 
@@ -396,7 +394,6 @@
  ::chatbot-answer-failure
  (fn [db [_ error-response]]
    (-> db
-       (assoc :answer-loading? false)
        (assoc :answer-error
               (str "Error getting an answer: " (pr-str error-response))))))
 
