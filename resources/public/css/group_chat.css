@@ -1,66 +1,26 @@
 .group-chat-panel {
-    width: 90%;
-    max-width: 50rem;
-    margin: 2rem auto;
     padding: 2rem;
-    background-color: #f9f9f9;
-    border: 1px solid #ddd;
-    border-radius: 0.5rem;
-    box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.1);
-    font-family: Arial, sans-serif;
-}
-
-.group-chat-panel h3 {
-    font-size: 2rem;
-    margin-bottom: 1rem;
-    text-align: center;
-    color: #333;
-}
-
-.group-chat-panel label {
-    font-size: 1.2rem;
-    margin-right: 0.5rem;
-    color: #555;
-}
-
-.group-chat-panel input[type="text"] {
-    font-size: 1.2rem;
-    padding: 0.5rem;
-    border: 1px solid #ccc;
-    border-radius: 0.3rem;
-    width: calc(100% - 1rem);
-    margin-bottom: 1rem;
-}
-
-.group-chat-panel button {
-    font-size: 1.2rem;
-    padding: 0.7rem 1.5rem;
-    margin-right: 1rem;
-    border: none;
-    border-radius: 0.3rem;
-    background-color: #de5798;
-    color: white;
-    cursor: pointer;
-    transition: background-color 0.3s ease;
-}
-
-.group-chat-panel button:hover {
-    background-color: #c24d85;
+    background-color: var(--primary-color);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
 }
 
 .group-chat-panel ul {
     list-style: none;
-    padding: 0;
-    margin: 1rem 0;
+    padding: 1rem;
     max-height: 15rem;
     overflow-y: auto;
-    border: 1px solid #ccc;
     border-radius: 0.3rem;
-    background-color: #fff;
+    background-color: var(--secondary-color);
+    scrollbar-width: none;
+}
+
+.group-chat-panel p {
+    color: var(--secondary-color);
 }
 
 .group-chat-panel ul li {
-    font-size: 1.2rem;
     padding: 0.5rem;
     border-bottom: 1px solid #eee;
 }
@@ -69,14 +29,23 @@
     border-bottom: none;
 }
 
-.group-chat-panel .error {
-    color: red;
-    font-size: 1.2rem;
+.group-wrapper {
+    width: 50%;
+    background-color: var(--secondary-color);
+    border-radius: 0.5rem;
+}
+
+.lbll {
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
     margin-bottom: 1rem;
 }
 
-.group-chat-panel .loading {
-    font-size: 1.2rem;
-    color: #555;
-    margin-bottom: 1rem;
+.lbll input {
+    padding: 0.5rem;
+    border: none;
+    border-radius: 4px;
+    font-size: 1rem;
+    min-width: 60%;
 }

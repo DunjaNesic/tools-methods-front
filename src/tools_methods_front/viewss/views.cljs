@@ -14,10 +14,8 @@
    [nav]
    [symptom-checker-panel]
    [specs]
+   [one-to-one-chat-panel]
+   [group-chat-panel]
    [chatbot-panel]
    [personalized-treatment-panel]
-   [symptom-history-panel]
-   [:hr]
-   [one-to-one-chat-panel]
-   [:hr]
-   [group-chat-panel]])
+   [symptom-history-panel]])

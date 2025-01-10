@@ -137,11 +137,6 @@
 ;; Grupni cet:
 
 (re-frame/reg-event-db
- :update-group-user-email
- (fn [db [_ val]]
-   (assoc-in db [:group-chat :user-email] val)))
-
-(re-frame/reg-event-db
  :update-group-user-input
  (fn [db [_ val]]
    (assoc-in db [:group-chat :user-input] val)))
