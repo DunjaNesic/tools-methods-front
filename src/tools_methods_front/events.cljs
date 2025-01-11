@@ -83,10 +83,15 @@
  (fn [db [_ original-msg response]]
    (-> db
        (update-in [:one-to-one :messages]
-                  conj {:sender (:user db)
-                        :message original-msg})
+                  (fn [existing-messages]
+                    (sort-by :timestamp
+                             (concat existing-messages
+                                     [{:sender (:user db)
+                                       :message original-msg
+                                       :timestamp (js/Date.now)}]))))
        (assoc-in [:one-to-one :loading?] false)
        (assoc-in [:one-to-one :error] nil))))
+
 
 (re-frame/reg-event-db
  ::send-1to1-failure
@@ -580,3 +585,41 @@
  ::history-failed
  (fn [db [_ error]]
    (js/console.log "Error history response:" error)))
+
+(re-frame/reg-event-fx
+ ::fetch-1to1-messages
+ (fn [{:keys [db]} [_ receiver last-checked-timestamp]]
+   (js/console.log "Request Params:" {:action "fetch-new-messages"
+                                      :receiver receiver
+                                      :last-checked-timestamp (str last-checked-timestamp)})
+   {:db (assoc db :one-to-one-loading? true :one-to-one-error nil)
+    :http-xhrio {:method          :post
+                 :uri             "http://localhost:3000/chat"
+                 :params          {:action "fetch-new-messages"
+                                   :receiver receiver
+                                   :last-checked-timestamp (str last-checked-timestamp)}
+                 :timeout         10000
+                 :format          (json-request-format)
+                 :response-format (json-response-format {:keywords? true})
+                 :on-success      [::fetch-1to1-messages-success]
+                 :on-failure      [::fetch-1to1-messages-failure]}}))
+
+(re-frame/reg-event-db
+ ::fetch-1to1-messages-success
+ (fn [db [_ response]]
+   (js/console.log "successssssss:" response)
+   (update db :one-to-one
+           (fn [one-to-one]
+             (update one-to-one :messages
+                     (fn [existing-messages]
+                       (sort-by :timestamp
+                                (distinct (concat existing-messages (:messages response))))))))))
+
+
+(re-frame/reg-event-db
+ ::fetch-1to1-messages-failure
+ (fn [db [_ error]]
+   (js/console.log "errorrrrrrrrrr" error)
+   (-> db
+       (assoc :one-to-one-loading? false
+              :one-to-one-error error)))) 

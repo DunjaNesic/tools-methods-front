@@ -5,11 +5,18 @@
    [tools-methods-front.subs :as subs]))
 
 (defn one-to-one-chat-panel []
-  (let [receiver     (re-frame/subscribe [::subs/one-to-one-receiver])
+
+  (let [sender       (re-frame/subscribe [::subs/user])
+        receiver     (re-frame/subscribe [::subs/one-to-one-receiver])
         messages     (re-frame/subscribe [::subs/one-to-one-messages])
         loading?     (re-frame/subscribe [::subs/one-to-one-loading?])
         error        (re-frame/subscribe [::subs/one-to-one-error])
         user-input   (re-frame/subscribe [::subs/one-to-one-user-input])]
+
+
+    (js/setInterval
+     #(re-frame/dispatch [::events/fetch-1to1-messages @sender (js/Date.now)])
+     5000)
 
     ;; (js/console.log "Sender:" @sender)
     ;; (js/console.log "Receiver:" @receiver)
@@ -30,7 +37,7 @@
 
      [:div.chat
       (when @loading? [:p "Loading..."])
-      (when @error [:p {:style {:color "red"}} (str "Error: " @error)])
+      (when @error [:div.error @error])
 
       [:h1 @receiver]
       [:ul

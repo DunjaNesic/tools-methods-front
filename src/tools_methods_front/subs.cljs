@@ -141,7 +141,7 @@
 (re-frame/reg-sub
  ::role
  (fn [db _]
-   (:user db)))
+   (:role db)))
 
 (re-frame/reg-sub
  ::registration-error

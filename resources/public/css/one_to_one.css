@@ -1,7 +1,8 @@
 .one-to-one-chat-panel {
-    padding: 2rem;
+    padding: 7rem 2rem 2rem 2rem;
     display: flex;
     gap: 3rem;
+    min-height: calc(100vh - 9rem);
 }
 
 .one-to-one-chat-panel ul {
