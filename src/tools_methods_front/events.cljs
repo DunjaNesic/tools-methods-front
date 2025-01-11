@@ -15,11 +15,6 @@
 ;;1 na 1 cet:
 
 (re-frame/reg-event-db
- ::update-1to1-sender
- (fn [db [_ new-sender]]
-   (assoc-in db [:one-to-one :sender] new-sender)))
-
-(re-frame/reg-event-db
  ::update-1to1-receiver
  (fn [db [_ new-receiver]]
    (assoc-in db [:one-to-one :receiver] new-receiver)))

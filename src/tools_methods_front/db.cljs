@@ -3,9 +3,9 @@
 (def default-db
   {;; 1-to-1 chat
    :one-to-one {:sender   ""
-                :receiver "bbb@gmail.com"
+                :receiver ""
                 :messages []
-                :user-input "dunja"
+                :user-input ""
                 :loading?  false
                 :error     nil}
 

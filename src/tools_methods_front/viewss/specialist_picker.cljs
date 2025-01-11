@@ -9,6 +9,10 @@
   (let [images ["/images/female-doc.png" "/images/male-doc.png"]
         random-image (rand-nth images)]
     [:div.specialist-card
+     {:on-click #(do
+                   (re-frame/dispatch [::events/update-1to1-receiver (:userr/email specialist)])
+                   (re-frame/dispatch [::events/start-1to1])
+                   (re-frame/dispatch [::events/show-1to1-messages]))}
      [:img {:src random-image
             :alt (:userr/name specialist)
             :class "specialist-image"}]

@@ -5,8 +5,7 @@
    [tools-methods-front.subs :as subs]))
 
 (defn one-to-one-chat-panel []
-  (let [sender       (re-frame/subscribe [::subs/user])
-        receiver     (re-frame/subscribe [::subs/one-to-one-receiver])
+  (let [receiver     (re-frame/subscribe [::subs/one-to-one-receiver])
         messages     (re-frame/subscribe [::subs/one-to-one-messages])
         loading?     (re-frame/subscribe [::subs/one-to-one-loading?])
         error        (re-frame/subscribe [::subs/one-to-one-error])
@@ -20,40 +19,30 @@
     ;; (js/console.log "User Input:" @user-input)
 
     [:div.one-to-one-chat-panel
-     [:h3 "1-to-1 Chat"]
-     (when @loading? [:p "Loading..."])
-     (when @error [:p {:style {:color "red"}} (str "Error: " @error)])
+     [:div.left-of-chat
+      [:div.chat-wrap1
+       [:p "A consultation with a specialist doctor is charged at 30 RSD per minute."]
+       [:p "The cost of your consultation is 900 RSD."]]
+      [:div.chat-wrap2
+       [:p "Don't like the professional opinion of an expert? You have the chance to chat with completely random people who might be even worse than Google doctors"]
+       [:button.btn.green-btn "Join group chat"]]]
 
-     [:div
-      [:label "Sender Email: "]
-      [:input {:type      "text"
-               :value     @sender
-               :on-change #(re-frame/dispatch
-                            [::events/update-1to1-sender (-> % .-target .-value)])}]]
 
-     [:div
-      [:label "Receiver Email: "]
-      [:input {:type      "text"
-               :value     @receiver
-               :on-change #(re-frame/dispatch
-                            [::events/update-1to1-receiver (-> % .-target .-value)])}]]
+     [:div.chat
+      (when @loading? [:p "Loading..."])
+      (when @error [:p {:style {:color "red"}} (str "Error: " @error)])
 
-     [:div
-      [:button {:on-click #(re-frame/dispatch [::events/start-1to1])}
-       "Start Chat"]
-      [:button {:on-click #(re-frame/dispatch [::events/show-1to1-messages])}
-       "Show Messages"]]
+      [:h1 @receiver]
+      [:ul
+       (for [[idx m] (map-indexed vector @messages)]
+         ^{:key (str idx "-" (:sender m))}
+         [:li (str (:sender m) ": " (:message m))])]
 
-     [:ul
-      (for [m @messages]
-        ^{:key (str (:sender m) "-" (:message m))}
-        [:li (str (:sender m) ": " (:message m))])]
-
-     [:div.message-input
-      [:label "Message: "]
-      [:input {:type      "text"
-               :value     @user-input
-               :on-change #(re-frame/dispatch
-                            [::events/update-1to1-user-input (-> % .-target .-value)])}]
-      [:button {:on-click #(re-frame/dispatch [::events/send-1to1-message])}
-       "Send"]]]))
+      [:div.lbll
+       [:input {:type      "text"
+                :placeholder "Message"
+                :value     @user-input
+                :on-change #(re-frame/dispatch
+                             [::events/update-1to1-user-input (-> % .-target .-value)])}]
+       [:button.btn.green-btn {:on-click #(re-frame/dispatch [::events/send-1to1-message])}
+        "Send"]]]]))

@@ -4,12 +4,6 @@
 
 ;; 1-to-1 chat
 (re-frame/reg-sub
- ::one-to-one-sender
- (fn [db _]
-  ;;  (js/console.log "Fetching sender from DB:" (get-in db [:one-to-one :sender]))
-   (get-in db [:one-to-one :sender])))
-
-(re-frame/reg-sub
  ::one-to-one-receiver
  (fn [db _]
    (get-in db [:one-to-one :receiver])))
@@ -35,11 +29,6 @@
    (get-in db [:one-to-one :user-input])))
 
 ;; Group chat
-(re-frame/reg-sub
- :group-user-email
- (fn [db _]
-   (get-in db [:group-chat :user-email])))
-
 (re-frame/reg-sub
  :group-messages
  (fn [db _]
