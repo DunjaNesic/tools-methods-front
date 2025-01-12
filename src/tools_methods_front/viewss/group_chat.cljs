@@ -7,19 +7,21 @@
   ;;bukv ne kapiram razliku izmedju :: i :, oba rade
   (let [messages    @(re-frame/subscribe [:group-messages])
         joined?     @(re-frame/subscribe [:group-joined?])
-        loading?    @(re-frame/subscribe [:group-loading?])
         error       @(re-frame/subscribe [:group-error])
         user-input  @(re-frame/subscribe [:group-user-input])]
 
     (reagent.core/after-render
      (fn []
-       (do
-         (re-frame/dispatch [:join-group])
-         (re-frame/dispatch [:show-group]))))
+       (re-frame/dispatch [:join-group])
+       (re-frame/dispatch [:show-group])))
+
+    (js/setInterval
+     #(re-frame/dispatch [:show-group (js/Date.now)])
+     5000)
+
 
     [:div.group-chat-panel
-     [:h2 "Most likely a toxic chat"]
-     (when loading? [:p "Loading..."])
+     [:h2 "Group chat, most likely a toxic one"]
      (when error [:p {:style {:color "red"}} (str "Error: " error)])
 
      (if (not joined?)

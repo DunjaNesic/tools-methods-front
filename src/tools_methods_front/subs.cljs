@@ -156,12 +156,12 @@
 (re-frame/reg-sub
  ::cost
  (fn [db _]
-   (:user db)))
+   (:cost db)))
 
 (re-frame/reg-sub
  ::cost-message
  (fn [db _]
-   (:user db)))
+   (:cost-message db)))
 
 (re-frame/reg-sub
  ::specialists
@@ -173,3 +173,7 @@
  (fn [db _]
    (:symptom-history db)))
 
+(re-frame/reg-sub
+ ::patients
+ (fn [db _]
+   (:patients db)))

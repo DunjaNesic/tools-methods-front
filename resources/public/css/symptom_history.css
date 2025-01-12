@@ -6,7 +6,7 @@
     background-color: var(--primary-color);
     align-items: center;
     position: relative;
-
+    min-height: 100vh;
 }
 
 img.pattern {
@@ -18,13 +18,13 @@ img.pattern {
     pointer-events: none;
 }
 
-
 .title {
     font-size: 2.2rem;
     color: var(--secondary-color);
 }
 
 .history-card {
+    min-width: 16rem;
     max-width: 20rem;
     border-radius: 1rem;
     padding: 1rem;

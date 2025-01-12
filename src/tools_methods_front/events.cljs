@@ -98,8 +98,7 @@
  (fn [db [_ resp]]
    (-> db
        (assoc-in [:one-to-one :loading?] false)
-       (assoc-in [:one-to-one :error]
-                 (str "Failed to send message: " (pr-str resp))))))
+       (assoc-in [:one-to-one :error] (get-in resp [:response :error])))))
 
 (re-frame/reg-event-fx
  ::show-1to1-messages
@@ -201,7 +200,6 @@
  :send-group-failure
  (fn [db [_ resp]]
    (-> db
-       (assoc-in [:group-chat :loading?] false)
        (assoc-in [:group-chat :error] (str "Failed to send group msg: " (pr-str resp))))))
 
 (re-frame/reg-event-fx
@@ -222,14 +220,12 @@
  (fn [db [_ response]]
    (-> db
        (assoc-in [:group-chat :messages] (:messages response))
-       (assoc-in [:group-chat :loading?] false)
        (assoc-in [:group-chat :error] nil))))
 
 (re-frame/reg-event-db
  :show-group-failure
  (fn [db [_ resp]]
    (-> db
-       (assoc-in [:group-chat :loading?] false)
        (assoc-in [:group-chat :error]
                  (str "Failed to show group messages: " (pr-str resp))))))
 
@@ -410,6 +406,7 @@
    (-> db
        (assoc :logged-in? true
               :user (:userr/email (:user response))
+              :user-id (:userr/id (:user response))
               :role (:userr/user_type (:user response))))))
 
 (re-frame/reg-event-db
@@ -496,9 +493,7 @@
  ::start-charging-success
  (fn [db [_ response]]
    (-> db
-       (assoc :cost-message (:message response)
-              :cost-error nil
-              :cost (:cost response)))))
+       (assoc :cost-error nil))))
 
 (re-frame/reg-event-db
  ::start-charging-failure
@@ -534,6 +529,25 @@
  ::stop-charging-failure
  (fn [db [_ error]]
    (assoc db :cost-error (:message error))))
+
+(re-frame/reg-event-fx
+ ::load-patients
+ (fn [_ _]
+   {:http-xhrio {:method          :get
+                 :uri             "http://localhost:3000/patients"
+                 :response-format (json-response-format {:keywords? true})
+                 :on-success      [::patients-loaded]
+                 :on-failure      [::patients-failed-load]}}))
+
+(re-frame/reg-event-db
+ ::patients-loaded
+ (fn [db [_ response]]
+   (assoc db :patients (:patients response))))
+
+(re-frame/reg-event-db
+ ::patients-failed-load
+ (fn [db [_ error]]
+   (assoc db :specialists-error error)))
 
 (re-frame/reg-event-fx
  ::load-specialists
@@ -578,7 +592,6 @@
 (re-frame/reg-event-db
  ::history-success
  (fn [db [_ response]]
-   (js/console.log "Success response:" response)
    (assoc db :symptom-history (:history response))))
 
 (re-frame/reg-event-db

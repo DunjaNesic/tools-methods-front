@@ -39,7 +39,7 @@
    ;;Login
    :logged-in? false
    :user nil
-   :user-id 1
+   :user-id 0
    :login-error nil
    :role ""
    :name ""
@@ -54,6 +54,8 @@
 
    :specialists nil
    :specialists-error nil
+
+   :patients nil
 
    :symptom-history nil})
 
