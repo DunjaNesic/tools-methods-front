@@ -271,7 +271,8 @@
 (re-frame/reg-event-fx
  ::check-symptoms
  (fn [{:keys [db]} [_ local-symptoms]]
-   (let [user-symptoms (if (string? local-symptoms)
+   (let [user-id        (:user-id db)
+         user-symptoms (if (string? local-symptoms)
                          (->> (clojure.string/split local-symptoms #",")
                               (map #(-> %
                                         clojure.string/trim
@@ -281,7 +282,7 @@
          request-data   {:method          :post
                          :uri             "http://localhost:3000/check-symptoms"
                          :params          {:symptoms user-symptoms
-                                           :user-id 1}
+                                           :user-id user-id}
                          :format          (json-request-format)
                          :response-format (json-response-format {:keywords? true})
                          :on-success      [::check-symptoms-success]
@@ -620,7 +621,6 @@
 (re-frame/reg-event-db
  ::fetch-1to1-messages-success
  (fn [db [_ response]]
-   (js/console.log "successssssss:" response)
    (update db :one-to-one
            (fn [one-to-one]
              (update one-to-one :messages
@@ -632,7 +632,6 @@
 (re-frame/reg-event-db
  ::fetch-1to1-messages-failure
  (fn [db [_ error]]
-   (js/console.log "errorrrrrrrrrr" error)
    (-> db
        (assoc :one-to-one-loading? false
               :one-to-one-error error)))) 

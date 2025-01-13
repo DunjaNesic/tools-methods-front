@@ -25,17 +25,21 @@
         [:div.chat-wrap1
          [:p "A consultation with a specialist doctor is charged at 30 RSD per minute."]
          [:p @cost-message]
-         [:p "The cost of your consultation is 900 RSD."]]
+         [:p "When you finish chating, specialist will tell you the cost of your consultation."]]
         [:div.chat-wrap2
          [:p "Don't like the professional opinion of an expert? You have the chance to chat with completely random people who might be even worse than Google doctors"]
          [:button.btn.green-btn "Join group chat"]]]
 
        (= @role "specialist")
        [:div.left-of-chat
-        [:button.btn.green-btn {:on-click #(re-frame/dispatch [::events/start-charging])}
-         "Start Charging"]
-        [:button.btn.red-btn {:on-click #(re-frame/dispatch [::events/stop-charging])}
-         "Stop Charging"]])
+        [:div.btns
+         [:button.btn.green-btn {:on-click #(re-frame/dispatch [::events/start-charging])}
+          "Start Charging"]
+         [:button.btn.red-btn {:on-click #(re-frame/dispatch [::events/stop-charging])}
+          "Stop Charging"]]
+        [:div
+         [:p "Send this to the patient:"]
+         [:p @cost-message]]])
 
      [:div.chat
       (when @error [:div.error @error])
